@@ -73,17 +73,13 @@ exports.handler = async (event) => {
 async function handleEvent(event, webhookUrl, slackChannel) {
     console.log('Processing event:', JSON.stringify(event, null, 2));
     
-    // イベントの基本情報を抽出
     const eventType = event.event_source || 'unknown';
     const eventAction = event.event_action || 'unknown';
     const eventDescription = event.event_description || 'unknown';
-    const timestamp = event.timestamp || new Date().toISOString();
     
-    // リソース情報を抽出
     const resourceId = event.resource_id || 'Unknown';
     const resourceName = event.resource_name || 'Unknown';
     
-    // イベントペイロードから詳細情報を抽出
     const payload = event.event_payload || {};
     const bucket = payload.bucket || {};
     const version = payload.version || {};
@@ -199,7 +195,7 @@ async function handleEvent(event, webhookUrl, slackChannel) {
     }
     
     // チャンネル情報がある場合は追加
-    if (channel.name) {
+    if (channel && channel.name) {
         message.attachments[0].fields.push({
             title: 'チャンネル',
             value: `${channel.name}${channel.managed ? ' (managed)' : ''}`,
@@ -258,8 +254,7 @@ async function handleEvent(event, webhookUrl, slackChannel) {
     // HCPポータルへのリンクを追加
     if (bucket.name) {
         const baseUrl = `https://portal.cloud.hashicorp.com/services/packer/buckets/${bucket.name}`;
-        const url = version.id ? `${baseUrl}/versions/${version.id}` : baseUrl;
-        message.attachments[0].title_link = url;
+        message.attachments[0].title_link = baseUrl;
     }
     
     // Slackに通知を送信
