@@ -21,7 +21,7 @@ Webhookから配信されるペイロードのサンプルや、イベントの�
 * AWSアカウント 作成
 * HCPアカウント/プロジェクト 作成
 * Slack Webhook URL 取得
-* Packer / Terraform 実行環境
+* Packer / Terraform / HCP CLI 実行環境
 
 ## 作成
 
@@ -45,6 +45,13 @@ app_name          = "hcp-packer-notify"                            # アプリ�
 aws_region        = "ap-northeast-1"                               # 作成リージョン
 project_id        = "XXXX-XXXX-XXXX-XXXX-XXXX"                     # HCP プロジェクトID
 EOF
+```
+
+ローカル環境のTerraformでHCP Packerを作成するため、  
+HCPへログインします。
+
+```
+hcp auth login;
 ```
 
 `terraform apply` でリソースを作成します。
